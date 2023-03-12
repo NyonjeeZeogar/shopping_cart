@@ -1,72 +1,71 @@
-import React, { useEffect, useState } from "react";
-// import Header from "./components/header/Header";
-// import Search from "./components/search/Search";
-// import AddProducts from "./components/addproducts/AddProducts";
-// import CardBody from "./components/cards/CardBody";
-// import Button from "./components/button/Button";
+import React, {useEffect, useState} from "react";
+import Header from "./components/header/Header";
+import Search from "./components/search/Search";
 
 import "./App.css";
+
+
 const App = () => {
-  const [items, setItem] = useState([]);
+  const [items, setItems] = useState([]);
   const [searchValue, setSearchValue] = useState("");
-  const [addedItems, setAddedItem] = useState([]);
+  const [addedItems, setAddedItems] = useState([]);
   const [showAddProducts, setShowAddProducts] = useState(false);
 
   useEffect(() => {
     fetch("https://fakestoreapi.com/products/")
       .then((res) => res.json())
-      .then((data) => setItem(data));
-    console.count("hi");
+      .then((data) => setItems(data));
   }, []);
-  function changingSrarchData(e) {
+
+  function handleSearch(e) {
     setSearchValue(e.target.value);
   }
-  const itmesFilter = items.filter((item) =>
+
+  function handleAdd(item) {
+    item.addNumber = 1;
+    const itemsArr = addedItems;
+    setAddedItems([...itemsArr, item]);
+  }
+
+  function handleRemove(item) {
+    const newItems = addedItems.filter((addedItem) => addedItem.id !== item.id);
+    setAddedItems(newItems);
+  }
+
+  const filteredItems = items.filter((item) =>
     item.title.toLowerCase().includes(searchValue.toLowerCase())
   );
 
-  function addItem(item) {
-    item.addNumber = 1;
-    const itemArr = addedItems;
-    setAddedItem([...itemArr, item]);
-  }
-  // console.log(addedItems);
-  function removeItem(item) {
-    const newItems = addedItems.filter((addedItem) => addedItem.id !== item.id);
-    setAddedItem(newItems);
-    // console.log(addedItems);
-  }
   return (
     <div>
-      {/* <Header /> */}
-
       <div className="body__container">
         <div className="nav">
           <Header />
           <div className="nav-right">
             <Search
-              products={items}
               value={searchValue}
-              onChangeData={changingSrarchData}
+              onChange={handleSearch}
             />
-            <Button num={addedItems.length} click={setShowAddProducts} />
+            {/* <Button
+              num={addedItems.length}
+              click={() => setShowAddProducts(!showAddProducts)}
+            /> */}
           </div>
         </div>
 
         {showAddProducts && (
-          <AddProducts
-            click={setShowAddProducts}
+          {/* <AddProducts
             items={addedItems}
-            removeItem={removeItem}
-            setAddedItem={setAddedItem}
-          />
+            removeItem={handleRemove}
+            setAddedItem={setAddedItems}
+          /> */}
         )}
-        <CardBody
-          products={itmesFilter}
-          addItem={addItem}
-          removeItem={removeItem}
+        {/* <CardBody
+          products={filteredItems}
+          addItem={handleAdd}
+          removeItem={handleRemove}
           addedItems={addedItems}
-        />
+        /> */}
       </div>
     </div>
   );
